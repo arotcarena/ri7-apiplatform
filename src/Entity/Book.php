@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 #[ApiResource(
@@ -22,17 +23,23 @@ class Book
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[ApiProperty(readable: false)]
     private ?int $id = null;
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3)]
     #[ORM\Column(length: 255)]
     private ?string $author = null;
 
+    #[Assert\Length(exactly: 4)]
     #[ORM\Column(length: 4, nullable: true)]
     private ?string $year = null;
+
+    #[ORM\ManyToOne(inversedBy: 'books')]
+    private ?Category $category = null;
 
     public function getId(): ?int
     {
@@ -71,6 +78,18 @@ class Book
     public function setYear(?string $year): static
     {
         $this->year = $year;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }
