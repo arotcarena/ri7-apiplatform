@@ -1,10 +1,6 @@
 name: Mon premier workflow
 env:
   VARIABLE_NAME: value
-jobs:
-build:
-  runs-on: ubuntu-latest
-  steps:
 on:
   push:
     branches:
