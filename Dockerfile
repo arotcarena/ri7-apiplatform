@@ -15,7 +15,7 @@ ENV DEVELOPED_BY=${DEVELOPED_BY:-username}
 RUN echo "PORT : ${PORT}"
 
 # Bash
-RUN apk add --no-cache bash
+# RUN apk add --no-cache bash
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.alpine.sh' | bash
 RUN apk add symfony-cli
 
