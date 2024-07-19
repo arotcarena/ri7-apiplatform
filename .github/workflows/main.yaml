@@ -20,3 +20,7 @@ jobs:
         run: ls -al
       - name: display variable
         run: echo ${{ env.VARIABLE_NAME }}
+      - name: Use a Secret
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: echo $DATABASE_URL
