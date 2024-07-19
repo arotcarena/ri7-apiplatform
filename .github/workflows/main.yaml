@@ -1,26 +1,14 @@
-name: Mon premier workflow
-env:
-  VARIABLE_NAME: value
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Exécuter une action
-        uses: actions/hello-world-docker-action@v1
-      - name: Add new directory
-        run: mkdir new_directory
-      - name: List files
-        run: ls -al
-      - name: display variable
-        run: echo ${{ env.VARIABLE_NAME }}
-      - name: Use a Secret
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: echo $DATABASE_URL
+  name: CI/CD workflow
+  on:
+    push:
+      branches: [ main ]
+  jobs:
+    build:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
+        - name: Install dependencies
+          run: composer install
+        - name: Run tests
+          run: ./vendor/bin/phpunit
