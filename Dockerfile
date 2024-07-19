@@ -1,32 +1,56 @@
-FROM dunglas/frankenphp:latest
+# FROM dunglas/frankenphp:latest
 
-# add additional extensions here:
-RUN install-php-extensions \
-pdo_pgsql \
-intl \
-zip \
-opcache
+# # add additional extensions here:
+# RUN install-php-extensions \
+# pdo_pgsql \
+# intl \
+# zip \
+# opcache
 
-ARG DEVELOPED_BY=username
+# ARG DEVELOPED_BY=username
+
+# # Definition d'une variable d'environnement pour le port
+# ENV PORT=8080
+# ENV DEVELOPED_BY=${DEVELOPED_BY:-username}
+# RUN echo "PORT : ${PORT}"
+
+# # Bash
+# RUN apk add --no-cache bash
+# RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.alpine.sh' | bash
+# RUN apk add symfony-cli
+
+# # Définir le répertoire de travail dans le conteneur
+# WORKDIR /app
+# # Copier tous les fichiers de l'application dans le répertoire de travail
+# COPY . .
+# # Exposer le port 8080 pour accéder à l'application
+# EXPOSE ${PORT}
+
+# RUN symfony composer install
+
+# # Définir la commande par défaut pour lancer l'application
+# CMD symfony serve --port=$PORT --dir=./
+
+
+# Utiliser une image de base officielle de PHP avec Alpine Linux
+FROM dunglas/frankenphp:alpine
 
 # Definition d'une variable d'environnement pour le port
-ENV PORT=8080
-ENV DEVELOPED_BY=${DEVELOPED_BY:-username}
-RUN echo "PORT : ${PORT}"
 
-# Bash
-# RUN apk add --no-cache bash
+RUN apk add --no-cache bash
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.alpine.sh' | bash
 RUN apk add symfony-cli
 
+RUN install-php-extensions pdo_pgsql intl zip opcache
+
 # Définir le répertoire de travail dans le conteneur
 WORKDIR /app
+
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 # Copier tous les fichiers de l'application dans le répertoire de travail
-COPY . .
-# Exposer le port 8080 pour accéder à l'application
-EXPOSE ${PORT}
+COPY --link . .
 
 RUN symfony composer install
 
-# Définir la commande par défaut pour lancer l'application
-CMD symfony serve --port=$PORT --dir=./
+ENV SERVER_NAME=:80
